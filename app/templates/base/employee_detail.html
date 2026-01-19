@@ -1,0 +1,73 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="detail-header">
+        <h2>Employee Details</h2>
+        <div class="detail-actions">
+            <a href="{% url 'employee_list' %}" class="btn btn-secondary">Back to List</a>
+            <a href="{% url 'employee_edit' employee.pk %}" class="btn">Edit</a>
+            <a href="{% url 'employee_delete' employee.pk %}" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+
+    <div class="detail-container">
+        <div class="detail-section">
+            <h3>Personal Information</h3>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Employee ID:</label>
+                    <span>{{ employee.id }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Full Name:</label>
+                    <span>{{ employee.first_name }} {{ employee.last_name }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Email:</label>
+                    <span><a href="mailto:{{ employee.email }}">{{ employee.email }}</a></span>
+                </div>
+                <div class="detail-item">
+                    <label>Phone:</label>
+                    <span><a href="tel:{{ employee.phone }}">{{ employee.phone }}</a></span>
+                </div>
+                <div class="detail-item">
+                    <label>Address:</label>
+                    <span>{{ employee.address|default:"Not provided" }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Date of Birth:</label>
+                    <span>{{ employee.date_of_birth|default:"Not provided" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h3>Employee Information</h3>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Position:</label>
+                    <span>{{ employee.position }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Department:</label>
+                    <span>{{ employee.department }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Salary:</label>
+                    <span>${{ employee.salary }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Date Joined:</label>
+                    <span>{{ employee.date_joined|date:"M d, Y" }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Status:</label>
+                    <span class="status {% if employee.is_active %}active{% else %}inactive{% endif %}">
+                        {% if employee.is_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

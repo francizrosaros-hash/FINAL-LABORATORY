@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="page-header-content">
+        <div class="page-icon blue">
+            <span>👥</span>
+        </div>
+        <div class="page-title-section">
+            <h1>Employee Directory</h1>
+            <p>Manage and view all employee records</p>
+        </div>
+    </div>
+    <a href="{% url 'employee_add' %}" class="header-btn">
+        <span>➕</span> Add Employee
+    </a>
+</div>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+    <div class="mini-stat">
+        <span class="mini-stat-value">{{ employees|length }}</span>
+        <span class="mini-stat-label">Total Employees</span>
+    </div>
+</div>
+
+<!-- Table Container -->
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Employee</th>
+                <th>Position</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td data-label="ID">
+                    <span class="id-badge">#{{ employee.id }}</span>
+                </td>
+                <td data-label="Employee">
+                    <div class="employee-info">
+                        <div class="avatar">{{ employee.first_name|slice:":1" }}{{ employee.last_name|slice:":1" }}</div>
+                        <div class="employee-name">
+                            <strong>{{ employee.first_name }} {{ employee.last_name }}</strong>
+                        </div>
+                    </div>
+                </td>
+                <td data-label="Position">{{ employee.position }}</td>
+                <td data-label="Department">
+                    <span class="dept-tag">{{ employee.department }}</span>
+                </td>
+                <td data-label="Status">
+                    <span class="status-badge {% if employee.is_active %}status-active{% else %}status-inactive{% endif %}">
+                        {% if employee.is_active %}● Active{% else %}○ Inactive{% endif %}
+                    </span>
+                </td>
+                <td data-label="Actions">
+                    <div class="table-actions">
+                        <a href="{% url 'employee_detail' employee.pk %}" class="tbl-btn tbl-btn-view" title="View">👁</a>
+                        <a href="{% url 'employee_edit' employee.pk %}" class="tbl-btn tbl-btn-edit" title="Edit">✏️</a>
+                        <a href="{% url 'employee_delete' employee.pk %}" class="tbl-btn tbl-btn-delete" title="Delete">🗑️</a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="empty-state">
+                    <div class="empty-content">
+                        <span class="empty-icon">📭</span>
+                        <p>No employees found</p>
+                        <a href="{% url 'employee_add' %}" class="btn">Add your first employee</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

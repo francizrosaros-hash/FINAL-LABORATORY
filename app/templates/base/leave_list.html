@@ -1,0 +1,101 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="page-header-content">
+        <div class="page-icon green">
+            <span>🏖️</span>
+        </div>
+        <div class="page-title-section">
+            <h1>Leave Requests</h1>
+            <p>Manage and approve employee leave requests</p>
+        </div>
+    </div>
+    <a href="{% url 'leave_add' %}" class="header-btn">
+        <span>➕</span> Request Leave
+    </a>
+</div>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+    <div class="mini-stat">
+        <span class="mini-stat-value">{{ leaves|length }}</span>
+        <span class="mini-stat-label">Total Requests</span>
+    </div>
+    <div class="mini-stat">
+        <span class="mini-stat-value">{% widthratio leaves|dictsort:"status"|length 1 1 %}</span>
+        <span class="mini-stat-label">Pending Review</span>
+    </div>
+</div>
+
+<!-- Table Container -->
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th>Days</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for leave in leaves %}
+            <tr>
+                <td data-label="ID">
+                    <span class="id-badge">#{{ leave.id }}</span>
+                </td>
+                <td data-label="Employee">
+                    <div class="employee-info">
+                        <div class="avatar">{{ leave.employee.first_name|slice:":1" }}{{ leave.employee.last_name|slice:":1" }}</div>
+                        <div class="employee-name">
+                            <strong>{{ leave.employee.first_name }} {{ leave.employee.last_name }}</strong>
+                            <small>{{ leave.employee.position }}</small>
+                        </div>
+                    </div>
+                </td>
+                <td data-label="Leave Type">
+                    <span class="leave-type-tag">{{ leave.get_leave_type_display }}</span>
+                </td>
+                <td data-label="From Date">{{ leave.start_date|date:"d M Y" }}</td>
+                <td data-label="To Date">{{ leave.end_date|date:"d M Y" }}</td>
+                <td data-label="Days" class="text-center">
+                    <strong>{{ leave.days_requested }}</strong>
+                </td>
+                <td data-label="Status">
+                    <span class="status-badge {% if leave.status == 'P' %}status-pending{% elif leave.status == 'A' %}status-approved{% else %}status-rejected{% endif %}">
+                        {% if leave.status == 'P' %}⏳ Pending{% elif leave.status == 'A' %}✓ Approved{% else %}✗ Rejected{% endif %}
+                    </span>
+                </td>
+                <td data-label="Actions">
+                    <div class="table-actions">
+                        <a href="{% url 'leave_edit' leave.pk %}" class="tbl-btn tbl-btn-edit" title="Edit">✏️</a>
+                        {% if leave.status == 'P' %}
+                        <a href="{% url 'leave_approve' leave.pk %}" class="tbl-btn tbl-btn-approve" title="Approve">✅</a>
+                        <a href="{% url 'leave_reject' leave.pk %}" class="tbl-btn tbl-btn-reject" title="Reject">❌</a>
+                        {% endif %}
+                        <a href="{% url 'leave_delete' leave.pk %}" class="tbl-btn tbl-btn-delete" title="Delete">🗑️</a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="empty-state">
+                    <div class="empty-content">
+                        <span class="empty-icon">📭</span>
+                        <p>No leave requests found</p>
+                        <a href="{% url 'leave_add' %}" class="btn">Submit your first leave request</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

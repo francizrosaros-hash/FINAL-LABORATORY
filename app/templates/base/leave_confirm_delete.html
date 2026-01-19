@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="container">
+    <h2>Delete Leave Request</h2>
+    <div class="confirm-delete">
+        <p>Are you sure you want to delete the leave request for <strong>{{ leave.employee }}</strong>?</p>
+        <p><strong>Type:</strong> {{ leave.get_leave_type_display }}</p>
+        <p><strong>Period:</strong> {{ leave.start_date|date:"M d, Y" }} to {{ leave.end_date|date:"M d, Y" }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                <a href="{% url 'leave_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

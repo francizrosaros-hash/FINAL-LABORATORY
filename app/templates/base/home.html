@@ -1,0 +1,158 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<!-- Dashboard Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">📊 Dashboard</div>
+        <h1>Welcome back, <span class="highlight-name">{{ user.get_full_name|default:user.username }}</span>!</h1>
+        <p class="hero-subtitle">Manage your workforce efficiently and keep your team organized</p>
+    </div>
+    <div class="hero-decoration">
+        <div class="decoration-item item-1"></div>
+        <div class="decoration-item item-2"></div>
+        <div class="decoration-item item-3"></div>
+    </div>
+</section>
+
+<!-- Quick Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <h3>Employees</h3>
+                    <p>Manage employee records</p>
+                </div>
+                <a href="{% url 'employee_list' %}" class="stat-link">→</a>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-icon">➕</div>
+                <div class="stat-info">
+                    <h3>Add New</h3>
+                    <p>Register new employee</p>
+                </div>
+                <a href="{% url 'employee_add' %}" class="stat-link">→</a>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-icon">📅</div>
+                <div class="stat-info">
+                    <h3>Attendance</h3>
+                    <p>Track check-ins</p>
+                </div>
+                <a href="{% url 'attendance_list' %}" class="stat-link">→</a>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-icon">📄</div>
+                <div class="stat-info">
+                    <h3>Leave Requests</h3>
+                    <p>Manage leave approvals</p>
+                </div>
+                <a href="{% url 'leave_list' %}" class="stat-link">→</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Actions Section -->
+<section class="actions-section">
+    <div class="container">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+            <a href="{% url 'employee_list' %}" class="action-btn primary">
+                <span class="btn-icon">👀</span> View All Employees
+            </a>
+            <a href="{% url 'employee_add' %}" class="action-btn secondary">
+                <span class="btn-icon">✏️</span> Add Employee
+            </a>
+        </div>
+    </div>
+</section>
+
+{% else %}
+<!-- Landing Page Section -->
+<section class="landing-section">
+    <div class="landing-container">
+        <div class="landing-content">
+            <div class="landing-badge">🔐 Secure System</div>
+            <h1>Employee Management <span class="gradient-text">Simplified</span></h1>
+            <p class="landing-description">
+                Streamline operations, track attendance, manage leave requests, and maintain employee records all in one place
+            </p>
+            <a href="{% url 'login' %}" class="cta-button">
+                <span>Get Started</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </a>
+        </div>
+        <div class="landing-visual">
+            <div class="visual-circle circle-1"></div>
+            <div class="visual-circle circle-2"></div>
+            <div class="visual-circle circle-3"></div>
+            <div class="visual-box box-1">
+                <div class="box-content">
+                    <div class="box-dot"></div>
+                    <div class="box-lines"></div>
+                </div>
+            </div>
+            <div class="visual-box box-2">
+                <div class="box-content">
+                    <div class="box-dot"></div>
+                    <div class="box-lines"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <h2 class="section-title">Features</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon icon-1">📊</div>
+                <h3>Comprehensive Dashboard</h3>
+                <p>View all your business metrics at a glance with an intuitive interface</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon icon-2">⏱️</div>
+                <h3>Time Tracking</h3>
+                <p>Accurate attendance and time tracking with automated check-ins</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon icon-3">✅</div>
+                <h3>Leave Management</h3>
+                <p>Simplified leave request workflow with approval automation</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon icon-4">🔒</div>
+                <h3>Secure & Reliable</h3>
+                <p>Enterprise-grade security with role-based access control</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to streamline your Employee Management?</h2>
+        <p>Login to access your Employee Management Dashboard</p>
+        <a href="{% url 'login' %}" class="cta-button cta-primary">
+            <span>Sign In Now</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </a>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

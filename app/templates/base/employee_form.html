@@ -1,0 +1,86 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+<div class="container form-container">
+    <h2>{{ title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-grid">
+            {% for field in form %}
+                {% if field.field.widget.input_type == 'checkbox' %}
+                    <div class="form-group form-check-group">
+                        <label for="{{ field.id_for_label }}" class="form-check-label">
+                            {{ field }}
+                            <span>{{ field.label }}</span>
+                        </label>
+                        {% if field.errors %}<span class="error">{{ field.errors }}</span>{% endif %}
+                    </div>
+                {% else %}
+                    <div class="form-group {% if field.field.widget.input_type == 'textarea' %}form-group-full{% endif %}">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            <span class="error">{{ field.errors }}</span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn">Save</button>
+            <a href="{% url 'employee_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const departmentSelect = document.getElementById('id_department');
+    const positionSelect = document.getElementById('id_position');
+    
+    if (departmentSelect && positionSelect) {
+        // Store the current position value for edit form
+        const currentPositionId = positionSelect.value;
+        
+        departmentSelect.addEventListener('change', function() {
+            const departmentId = this.value;
+            
+            // Clear position dropdown
+            positionSelect.innerHTML = '<option value="">---------</option>';
+            
+            if (departmentId) {
+                fetch(`/ajax/get-positions/?department_id=${departmentId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(position => {
+                            const option = document.createElement('option');
+                            option.value = position.id;
+                            option.textContent = position.title;
+                            positionSelect.appendChild(option);
+                        });
+                    });
+            }
+        });
+        
+        // Trigger change on page load if department is already selected (for edit form)
+        if (departmentSelect.value) {
+            fetch(`/ajax/get-positions/?department_id=${departmentSelect.value}`)
+                .then(response => response.json())
+                .then(data => {
+                    positionSelect.innerHTML = '<option value="">---------</option>';
+                    data.forEach(position => {
+                        const option = document.createElement('option');
+                        option.value = position.id;
+                        option.textContent = position.title;
+                        if (position.id == currentPositionId) {
+                            option.selected = true;
+                        }
+                        positionSelect.appendChild(option);
+                    });
+                });
+        }
+    }
+});
+</script>
+
+{% endblock %}

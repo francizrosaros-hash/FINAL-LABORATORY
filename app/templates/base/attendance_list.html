@@ -1,0 +1,90 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="page-header-content">
+        <div class="page-icon purple">
+            <span>📅</span>
+        </div>
+        <div class="page-title-section">
+            <h1>Attendance Records</h1>
+            <p>Track employee check-ins and check-outs</p>
+        </div>
+    </div>
+    <a href="{% url 'attendance_add' %}" class="header-btn">
+        <span>➕</span> Add Attendance
+    </a>
+</div>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+    <div class="mini-stat">
+        <span class="mini-stat-value">{{ attendances|length }}</span>
+        <span class="mini-stat-label">Total Records</span>
+    </div>
+</div>
+
+<!-- Table Container -->
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Employee</th>
+                <th>Date</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendance in attendances %}
+            <tr>
+                <td data-label="ID">
+                    <span class="id-badge">#{{ attendance.id }}</span>
+                </td>
+                <td data-label="Employee">
+                    <div class="employee-info">
+                        <div class="avatar purple">{{ attendance.employee.first_name|slice:":1" }}{{ attendance.employee.last_name|slice:":1" }}</div>
+                        <strong>{{ attendance.employee }}</strong>
+                    </div>
+                </td>
+                <td data-label="Date">
+                    <span class="date-display">📆 {{ attendance.date|date:"M d, Y" }}</span>
+                </td>
+                <td data-label="Check In">
+                    <span class="time-badge time-in">🟢 {{ attendance.check_in|time:"h:i A"|default:"--:--" }}</span>
+                </td>
+                <td data-label="Check Out">
+                    <span class="time-badge time-out">🔴 {{ attendance.check_out|time:"h:i A"|default:"--:--" }}</span>
+                </td>
+                <td data-label="Status">
+                    <span class="status-badge {% if attendance.status == 'P' %}status-active{% elif attendance.status == 'A' %}status-inactive{% else %}status-pending{% endif %}">
+                        {% if attendance.status == 'P' %}✓ Present{% elif attendance.status == 'A' %}✗ Absent{% else %}◐ {{ attendance.get_status_display }}{% endif %}
+                    </span>
+                </td>
+                <td data-label="Actions">
+                    <div class="table-actions">
+                        <a href="{% url 'attendance_edit' attendance.pk %}" class="tbl-btn tbl-btn-edit" title="Edit">✏️</a>
+                        <a href="{% url 'attendance_delete' attendance.pk %}" class="tbl-btn tbl-btn-delete" title="Delete">🗑️</a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="empty-state">
+                    <div class="empty-content">
+                        <span class="empty-icon">📅</span>
+                        <p>No attendance records found</p>
+                        <a href="{% url 'attendance_add' %}" class="btn">Record first attendance</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
